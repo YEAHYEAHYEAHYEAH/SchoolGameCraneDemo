@@ -4,11 +4,14 @@ var liveScoreboard;
 var highestScore = 0;
 
 var obstacles = [];
+var myScorePOne;
+var myScorePTwo;
 
 function startGame() {
+    myScorePOne = new score("30px", "Segoe UI", "black", 10, 32, "text");
+    myScorePTwo = new score("30px", "Segoe UI", "black", 500, 32, "text");
     playerOne = new component(50, 50, 10, 120, "playerOne", 'germ.png');
     playerTwo = new component(50, 50, 200, 120, "playerTwo", 'bacteria.png');
-    liveScoreboard = new textElement("Segoe UI", "40px", 0, 32, "SCORE: 0");
     GameArea.start();
 }
 
@@ -28,19 +31,19 @@ var GameArea = {
     }
 }
 
-function textElement(font, fontsize, x, y, startText) {
-    this.text = startText;
+function score(fontsize, font, color, x, y, type) {
     this.score = 0;
     this.font = font;
     this.fontsize = fontsize;
     this.x = x;
     this.y = y;
-    this.update = function() {
+    this.update = function () {
         ctx = GameArea.context;
         ctx.font = this.fontsize + " " + this.font;
-        ctx.fillStyle = "#06c";
+        ctx.fillStyle = color;
         ctx.fillText(this.text, this.x, this.y);
     }
+    
 }
 
 function component(width, height, x, y, id, imageUrl) {
@@ -103,7 +106,6 @@ function isBirdCollided() {
         if (playerOne.isCrashedInto(obstacles[i]) || playerTwo.isCrashedInto(obstacles[i])) {
             return true;
         }
-
     }
     return false;
 }
@@ -142,12 +144,10 @@ function updateGameArea() {
 
     createPipes();
 
-    if (GameArea.frameNo % 100 === 0) {
-        liveScoreboard.score = GameArea.frameNo / 100;
-        liveScoreboard.text = "SCORE: " + liveScoreboard.score;
-    }
-
-    liveScoreboard.update();
+    myScorePOne.text = "SCORE: " + GameArea.frameNo;
+    myScorePOne.update();
+    myScorePTwo.text = "SCORE: " + GameArea.frameNo;
+    myScorePTwo.update();
 
     playerOne.newPos();
     playerOne.update();
