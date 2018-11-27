@@ -12,17 +12,17 @@ function startGame() {
     myScorePTwo = new score("30px", "Segoe UI", "#06c", 1000, 32);
     livesPOne = new score("30px", "Segoe UI", "#06c", 240, 32);
     livesPTwo = new score("30px", "Segoe UI", "#06c", 800, 32);
-    newP1();
-    newP2();
+    newP1(false);
+    newP2(false);
 
     GameArea.start();
 }
-function newP1() {
-    if (playerOneLives > 0) playerOne = new component(50, 50, 10, 300, "playerOne", 'germ.png');
+function newP1(immunity) {
+    if (playerOneLives > 0) playerOne = new component(50, 50, 10, 300, "playerOne", 'germ.png', immunity);
 }
 
-function newP2() {
-    if (playerTwoLives > 0) playerTwo = new component(50, 50, 200, 300, "playerTwo", 'bacteria.png');
+function newP2(immunity) {
+    if (playerTwoLives > 0) playerTwo = new component(50, 50, 200, 300, "playerTwo", 'bacteria.png', immunity);
 }
 
 var GameArea = {
@@ -56,8 +56,9 @@ function score(fontsize, font, color, x, y) {
     
 }
 
-function component(width, height, x, y, id, imageUrl) {
+function component(width, height, x, y, id, imageUrl, immune) {
     this.id = id;
+    this.immune = immune;
     this.width = width;
     this.height = height;
     this.image = new Image();
@@ -111,7 +112,8 @@ function component(width, height, x, y, id, imageUrl) {
     }
 }
 
-function isBirdCollided(player) {
+function isGermCollided(player) {
+    if (player.immune) return false;
     for (i = 0; i < obstacles.length; i += 1) {
         if (player.isCrashedInto(obstacles[i])) {
             return true;
@@ -154,7 +156,7 @@ function updateGameArea() {
     myScorePTwo.update();
 
     if (playerOne) {
-        if (isBirdCollided(playerOne)) {
+        if (isGermCollided(playerOne)) {
             playerOne = null;
             playerOneLives -= 1;
         } else {
@@ -163,11 +165,14 @@ function updateGameArea() {
             if (GameArea.frameNo % 200 === 0) {
                 myScorePOne.score += 1;
             }
+            if (GameArea.frameNo % 2000 === 0) {
+                playerOne.immune = false;
+            }
         };
     }
     
     if (playerTwo) {
-        if (isBirdCollided(playerTwo)) {
+        if (isGermCollided(playerTwo)) {
             playerTwo = null;
             playerTwoLives -= 1;
         } else {
@@ -175,6 +180,9 @@ function updateGameArea() {
             playerTwo.update();
             if (GameArea.frameNo % 200 === 0) {
                 myScorePTwo.score += 1;
+            }
+            if (GameArea.frameNo % 2000 === 0) {
+                playerTwo.immune = false;
             }
         };
     }
