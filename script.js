@@ -18,11 +18,11 @@ function startGame() {
     GameArea.start();
 }
 function newP1() {
-    if (playerOneLives > 0) playerOne = new component(50, 50, 10, 550, "playerOne", 'germ.png');
+    if (playerOneLives > 0) playerOne = new component(50, 50, 10, 300, "playerOne", 'germ.png');
 }
 
 function newP2() {
-    if (playerTwoLives > 0) playerTwo = new component(50, 50, 200, 550, "playerTwo", 'bacteria.png');
+    if (playerTwoLives > 0) playerTwo = new component(50, 50, 200, 300, "playerTwo", 'bacteria.png');
 }
 
 var GameArea = {
@@ -183,7 +183,7 @@ function updateGameArea() {
 
 function jump(event) {
     const key = event.keyCode;
-    if (playerOne && key === 32) { //SPACE
+    if (playerOne && key === 65) { //a
         playerOne.speedY = -3;
     }
     else if (playerTwo && key === 38) {//UP
