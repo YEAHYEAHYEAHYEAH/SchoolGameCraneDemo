@@ -1,7 +1,7 @@
 var playerOne;
+var playerOneLives = 3;
 var playerTwo;
-var liveScoreboard;
-var highestScore = 0;
+var playerTwoLives = 3;
 
 var obstacles = [];
 var myScorePOne;
@@ -10,17 +10,19 @@ var myScorePTwo;
 function startGame() {
     myScorePOne = new score("30px", "Segoe UI", "#06c", 40, 32);
     myScorePTwo = new score("30px", "Segoe UI", "#06c", 1000, 32);
+    livesPOne = new score("30px", "Segoe UI", "#06c", 240, 32);
+    livesPTwo = new score("30px", "Segoe UI", "#06c", 800, 32);
     newP1();
     newP2();
 
     GameArea.start();
 }
 function newP1() {
-    playerOne = new component(50, 50, 10, 550, "playerOne", 'germ.png');
+    if (playerOneLives > 0) playerOne = new component(50, 50, 10, 550, "playerOne", 'germ.png');
 }
 
 function newP2() {
-    playerTwo = new component(50, 50, 200, 550, "playerTwo", 'bacteria.png');
+    if (playerTwoLives > 0) playerTwo = new component(50, 50, 200, 550, "playerTwo", 'bacteria.png');
 }
 
 var GameArea = {
@@ -142,13 +144,19 @@ function updateGameArea() {
     GameArea.frameNo += 1;
     createObstacles();
     myScorePOne.text = "SCORE: " + myScorePOne.score;
+    livesPOne.text = "LIVES: " + playerOneLives;
+    livesPOne.update();
     myScorePOne.update();
+
     myScorePTwo.text = "SCORE: " + myScorePTwo.score;
+    livesPTwo.text = "LIVES: " + playerTwoLives;
+    livesPTwo.update();
     myScorePTwo.update();
 
     if (playerOne) {
         if (isBirdCollided(playerOne)) {
             playerOne = null;
+            playerOneLives -= 1;
         } else {
             playerOne.newPosition();
             playerOne.update();
@@ -161,6 +169,7 @@ function updateGameArea() {
     if (playerTwo) {
         if (isBirdCollided(playerTwo)) {
             playerTwo = null;
+            playerTwoLives -= 1;
         } else {
             playerTwo.newPosition();
             playerTwo.update();
