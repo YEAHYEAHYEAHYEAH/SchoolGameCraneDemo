@@ -22,6 +22,9 @@ var GameArea = {
         },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    stop: function() {
+        clearInterval(this.interval);
     }
 }
 
@@ -102,7 +105,8 @@ function createPipes() {
 
 function updateGameArea() {
     if(isBirdCollided()) {
-        return false;
+        GameArea.canvas.style.animation = 'none';
+        GameArea.stop();
     };
 
     GameArea.clear();
