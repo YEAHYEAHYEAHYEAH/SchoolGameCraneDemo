@@ -6,12 +6,19 @@ var myScorePOne;
 var myScorePTwo;
 
 function startGame() {
-    myScorePOne = new score("30px", "Consolas", "black", 280, 40, "text");
-    myScorePTwo = new score("30px", "Consolas", "black", 480, 40, "text");
-    playerOne = new component(50, 50, 10, 120, "playerOne", 'germ.png');
-    playerTwo = new component(50, 50, 200, 120, "playerTwo", 'bacteria.png');
-    
+    myScorePOne = new score("30px", "Consolas", "black", 40, 40, "text");
+    myScorePTwo = new score("30px", "Consolas", "black", 1000, 40, "text");
+    newP1();
+    newP2();
+
     GameArea.start();
+}
+function newP1() {
+    playerOne = new component(50, 50, 10, 550, "playerOne", 'germ.png');
+}
+
+function newP2() {
+    playerTwo = new component(50, 50, 200, 550, "playerTwo", 'bacteria.png');
 }
 
 var GameArea = {
@@ -129,37 +136,42 @@ function createPipes() {
 }
 
 function updateGameArea() {
-    if (isBirdCollided(playerOne)) {
-        return false;
-    };
-    if (isBirdCollided(playerTwo)) {
-        return false;
-    };
-
     GameArea.clear();
     GameArea.frameNo += 1;
-
     createPipes();
-
-    playerOne.newPos();
-    playerOne.update();
-
-    playerTwo.newPos();
-    playerTwo.update();
-
-    myScorePOne.text = "SCORE: " + GameArea.frameNo;
+    myScorePOne.text = "SCORE: " + myScorePOne.score;
     myScorePOne.update();
-
-    myScorePTwo.text = "SCORE: " + GameArea.frameNo;
+    myScorePTwo.text = "SCORE: " + myScorePTwo.score;
     myScorePTwo.update();
+
+    if (playerOne) {
+        if (isBirdCollided(playerOne)) {
+            playerOne = null;
+        } else {
+            playerOne.newPos();
+            playerOne.update();
+            myScorePOne.score = GameArea.frameNo;
+        };
+    }
+    
+    if (playerTwo) {
+        if (isBirdCollided(playerTwo)) {
+            playerTwo = null;
+        } else {
+            playerTwo.newPos();
+            playerTwo.update();
+            myScorePTwo.score = GameArea.frameNo;
+        };
+    }
+    
 }
 
 function jump(event) {
     const key = event.keyCode;
-    if (key === 32) {
+    if (playerOne && key === 32) { //SPACE
         playerOne.speedY = -3;
     }
-    else if (key === 38) {
+    else if (playerTwo && key === 38) {//UP
         playerTwo.speedY = -3;
     }
 }
