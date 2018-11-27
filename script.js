@@ -109,16 +109,16 @@ function component(width, height, x, y, id, imageUrl) {
     }
 }
 
-function isBirdCollided() {
+function isBirdCollided(player) {
     for (i = 0; i < obstacles.length; i += 1) {
-        if (playerOne.isCrashedInto(obstacles[i]) || playerTwo.isCrashedInto(obstacles[i])) {
+        if (player.isCrashedInto(obstacles[i])) {
             return true;
         }
     }
     return false;
 }
 
-function createPipes() {
+function createObstacles() {
     var x, lampRandomSize, docRandomSize;
 
     if (GameArea.frameNo === 1 || GameArea.frameNo % 500 === 0) {
@@ -140,7 +140,7 @@ function createPipes() {
 function updateGameArea() {
     GameArea.clear();
     GameArea.frameNo += 1;
-    createPipes();
+    createObstacles();
     myScorePOne.text = "SCORE: " + myScorePOne.score;
     myScorePOne.update();
     myScorePTwo.text = "SCORE: " + myScorePTwo.score;

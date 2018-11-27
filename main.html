@@ -8,8 +8,10 @@
 </head>
 <body style="margin: 0px;" onload="startGame()" onkeyup="jump(event)">
     <script src="script.js"></script>
-    <button onclick="newP1()">Player 1</button>
-    <button onclick="newP2()">Player 2</button>
+    <div style = "margin-left: 600px;">
+        <button class="revive-button" onclick="newP1()">Player 1</button>
+        <button class="revive-button" onclick="newP2()">Player 2</button>
+    </div>
     <h3 id = "leaderboard">
     </h3>
 </body>

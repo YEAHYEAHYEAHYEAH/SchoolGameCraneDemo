@@ -17,6 +17,30 @@
     font-size: 40px;
 }
 
+
+.revive-button {
+    cursor: pointer;
+    transition: 0.2s;
+    margin-left: auto;
+    display: inline;
+    margin-right: auto;
+    font-family: 'Segoe UI';
+    font-size: 16px;
+    background: white;
+    color: #06c;
+    font-weight: 600;
+    padding: 5px;
+    border-color: #06c;
+    border-style: solid;
+    border-radius: 10px;
+}
+
+.revive-button:hover {
+    color: white;
+    background: #06c;
+
+}
+
 @keyframes slide {
     from { background-position: 0 0; }
     to { background-position: -1200px 0; }
