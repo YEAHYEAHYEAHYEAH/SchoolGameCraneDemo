@@ -1,11 +1,14 @@
 var playerOne;
 var playerTwo;
+var liveScoreboard;
+var highestScore = 0;
 
 var obstacles = [];
 
 function startGame() {
     playerOne = new component(50, 50, 10, 120, "playerOne", 'germ.png');
     playerTwo = new component(50, 50, 200, 120, "playerTwo", 'bacteria.png');
+    liveScoreboard = new textElement("Segoe UI", "40px", 0, 32, "SCORE: 0");
     GameArea.start();
 }
 
@@ -22,12 +25,23 @@ var GameArea = {
         },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    },
-    stop: function() {
-        clearInterval(this.interval);
     }
 }
 
+function textElement(font, fontsize, x, y, startText) {
+    this.text = startText;
+    this.score = 0;
+    this.font = font;
+    this.fontsize = fontsize;
+    this.x = x;
+    this.y = y;
+    this.update = function() {
+        ctx = GameArea.context;
+        ctx.font = this.fontsize + " " + this.font;
+        ctx.fillStyle = "#06c";
+        ctx.fillText(this.text, this.x, this.y);
+    }
+}
 
 function component(width, height, x, y, id, imageUrl) {
     this.id = id;
@@ -44,12 +58,15 @@ function component(width, height, x, y, id, imageUrl) {
         ctx = GameArea.context;
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
+
     this.newPos = function() {
+        // this.hitTop();
         this.speedY += this.gravity;
         this.x += this.speedX;
         this.y += this.speedY;
         this.hitBottom();
     }
+
     this.hitBottom = function() {
         var rockbottom = GameArea.canvas.height - this.height;
         if (this.y > rockbottom) {
@@ -57,6 +74,13 @@ function component(width, height, x, y, id, imageUrl) {
             this.gravitySpeed = 0;
         }
     }
+
+    this.hitTop = function() {
+        if (this.y < this.height) {
+            this.speedY = 0;
+        }
+    }
+
     this.isCrashedInto = function(otherobj) {
         var left = this.x;
         var right = this.x + (this.width);
@@ -87,14 +111,14 @@ function isBirdCollided() {
 function createPipes() {
     var x, lampRandomSize, docRandomSize;
 
-    if (GameArea.frameNo === 1 || GameArea.frameNo % 300 === 0) {
+    if (GameArea.frameNo === 1 || GameArea.frameNo % 500 === 0) {
         x = GameArea.canvas.width;
 
-        lampRandomSize = Math.random();
-        docRandomSize = Math.random();
+        lampRandomSize = Math.random() * (0.9 - 0.3) + 0.5;
+        docRandomSize =  Math.random() * (0.9 - 0.3) + 0.5;
 
         obstacles.push(new component(lampRandomSize*100, lampRandomSize*200, x, 0, "lamp", "lamp.png"));
-        obstacles.push(new component(docRandomSize*100, docRandomSize*400, x + 100, 550 - (docRandomSize*400), "doctor", "doctor.png"));
+        obstacles.push(new component(docRandomSize*100, docRandomSize*400, x + 250, 580 - (docRandomSize*400), "doctor", "doctor.png"));
     }
 
     for (i = 0; i < obstacles.length; i += 1) {
@@ -105,14 +129,25 @@ function createPipes() {
 
 function updateGameArea() {
     if(isBirdCollided()) {
-        GameArea.canvas.style.animation = 'none';
-        GameArea.stop();
+        if (liveScoreboard.score > highestScore) {
+            var leaderboard = document.getElementById("leaderboard");
+            leaderboard.textContent = "The highest score today is " + liveScoreboard.score;
+        }
+        GameArea.clear();
+        return;
     };
 
     GameArea.clear();
     GameArea.frameNo += 1;
 
     createPipes();
+
+    if (GameArea.frameNo % 100 === 0) {
+        liveScoreboard.score = GameArea.frameNo / 100;
+        liveScoreboard.text = "SCORE: " + liveScoreboard.score;
+    }
+
+    liveScoreboard.update();
 
     playerOne.newPos();
     playerOne.update();

@@ -10,6 +10,13 @@
     animation: slide 12s linear infinite;
 }
 
+#leaderboard {
+    display: block;
+    text-align: center;
+    font-family: 'Segoe UI';
+    font-size: 40px;
+}
+
 @keyframes slide {
     from { background-position: 0 0; }
     to { background-position: -1200px 0; }
