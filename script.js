@@ -2,10 +2,15 @@ var playerOne;
 var playerTwo;
 
 var obstacles = [];
+var myScorePOne;
+var myScorePTwo;
 
 function startGame() {
+    myScorePOne = new score("30px", "Consolas", "black", 280, 40, "text");
+    myScorePTwo = new score("30px", "Consolas", "black", 480, 40, "text");
     playerOne = new component(50, 50, 10, 120, "playerOne", 'germ.png');
     playerTwo = new component(50, 50, 200, 120, "playerTwo", 'bacteria.png');
+    
     GameArea.start();
 }
 
@@ -24,7 +29,30 @@ var GameArea = {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }
-
+function score(width, height, color, x, y, type) {
+    this.type = type;
+    this.score = 0;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;
+    this.gravity = 0;
+    this.gravitySpeed = 0;
+    this.update = function () {
+        ctx = GameArea.context;
+        if (this.type == "text") {
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.x, this.y);
+        } else {
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+    }
+    
+}
 
 function component(width, height, x, y, id, imageUrl) {
     this.id = id;
@@ -71,9 +99,9 @@ function component(width, height, x, y, id, imageUrl) {
     }
 }
 
-function isBirdCollided() {
+function isBirdCollided(player) {
     for (i = 0; i < obstacles.length; i += 1) {
-        if (playerOne.isCrashedInto(obstacles[i]) || playerTwo.isCrashedInto(obstacles[i])) {
+        if (player.isCrashedInto(obstacles[i])) {
             return true;
         }
 
@@ -101,7 +129,10 @@ function createPipes() {
 }
 
 function updateGameArea() {
-    if(isBirdCollided()) {
+    if (isBirdCollided(playerOne)) {
+        return false;
+    };
+    if (isBirdCollided(playerTwo)) {
         return false;
     };
 
@@ -115,6 +146,12 @@ function updateGameArea() {
 
     playerTwo.newPos();
     playerTwo.update();
+
+    myScorePOne.text = "SCORE: " + GameArea.frameNo;
+    myScorePOne.update();
+
+    myScorePTwo.text = "SCORE: " + GameArea.frameNo;
+    myScorePTwo.update();
 }
 
 function jump(event) {
