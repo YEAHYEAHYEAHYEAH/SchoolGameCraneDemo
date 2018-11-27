@@ -8,8 +8,8 @@ var myScorePOne;
 var myScorePTwo;
 
 function startGame() {
-    myScorePOne = new score("30px", "Segoe UI", "black", 40, 40, "text");
-    myScorePTwo = new score("30px", "Segoe UI", "black", 1000, 40, "text");
+    myScorePOne = new score("30px", "Segoe UI", "#06c", 40, 32);
+    myScorePTwo = new score("30px", "Segoe UI", "#06c", 1000, 32);
     newP1();
     newP2();
 
@@ -39,7 +39,7 @@ var GameArea = {
     }
 }
 
-function score(fontsize, font, color, x, y, type) {
+function score(fontsize, font, color, x, y) {
     this.score = 0;
     this.font = font;
     this.fontsize = fontsize;
@@ -70,7 +70,7 @@ function component(width, height, x, y, id, imageUrl) {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
-    this.newPos = function() {
+    this.newPosition = function() {
         // this.hitTop();
         this.speedY += this.gravity;
         this.x += this.speedX;
@@ -150,9 +150,11 @@ function updateGameArea() {
         if (isBirdCollided(playerOne)) {
             playerOne = null;
         } else {
-            playerOne.newPos();
+            playerOne.newPosition();
             playerOne.update();
-            myScorePOne.score = GameArea.frameNo;
+            if (GameArea.frameNo % 200 === 0) {
+                myScorePOne.score += 1;
+            }
         };
     }
     
@@ -160,9 +162,11 @@ function updateGameArea() {
         if (isBirdCollided(playerTwo)) {
             playerTwo = null;
         } else {
-            playerTwo.newPos();
+            playerTwo.newPosition();
             playerTwo.update();
-            myScorePTwo.score = GameArea.frameNo;
+            if (GameArea.frameNo % 200 === 0) {
+                myScorePTwo.score += 1;
+            }
         };
     }
     
