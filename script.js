@@ -113,8 +113,11 @@ function component(width, height, x, y, id, imageUrl, immune) {
 }
 
 function isGermCollided(player) {
+    var startingPoint = 0;
     if (player.immune) return false;
-    for (i = 0; i < obstacles.length; i += 1) {
+    if (obstacles.length > 10) startingPoint = obstacles.length - 8;
+
+    for (i = startingPoint; i < obstacles.length; i += 1) {
         if (player.isCrashedInto(obstacles[i])) {
             return true;
         }
@@ -197,4 +200,9 @@ function jump(event) {
     else if (playerTwo && key === 38) {//UP
         playerTwo.speedY = -3;
     }
+}
+
+function revivePlayers() {
+    newP1(true);
+    newP2(true);
 }
